@@ -6,8 +6,14 @@
 #include "amzcube_commons.h"
 
 void SpiffsSetup();
-bool fileExists(const char *filename);
-char *getFileFromSPIFFS(const char *filename);
-void writeFileToSPIFFS(const char *filename, const char *content);
+fs::File SpiffsGetFile(const char *filename, const char *mode);
+bool SpiffsFileExists(const char *filename);
+char *SpiffsGetFileContent(const char *filename);
+void SpiffsWriteFileContent(const char *filename, const char *content);
+
+char *fileRead(fs::File &f, uint16_t length);
+uint8_t fileRead8(fs::File &f);
+uint16_t fileRead16(fs::File &f);
+uint32_t fileRead32(fs::File &f);
 
 #endif

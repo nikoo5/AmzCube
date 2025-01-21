@@ -13,12 +13,22 @@ void SpiffsSetup()
   }
 }
 
-bool fileExists(const char *filename)
+fs::File SpiffsGetFile(const char *filename, const char *mode)
+{
+  fs::File file = SPIFFS.open(filename, mode);
+  if (!file)
+  {
+    error.printf("[SPIFFS] Failed to open file %s\n", filename);
+  }
+  return file;
+}
+
+bool SpiffsFileExists(const char *filename)
 {
   return SPIFFS.exists(filename);
 }
 
-char *getFileFromSPIFFS(const char *filename)
+char *SpiffsGetFileContent(const char *filename)
 {
   File file = SPIFFS.open(filename, "r");
   if (!file)
@@ -50,7 +60,7 @@ char *getFileFromSPIFFS(const char *filename)
   return buf;
 }
 
-void writeFileToSPIFFS(const char *filename, const char *content)
+void SpiffsWriteFileContent(const char *filename, const char *content)
 {
   info.printf("[SPIFFS] Writing file %s\n", filename);
 
@@ -72,4 +82,47 @@ void writeFileToSPIFFS(const char *filename, const char *content)
   file.close();
 
   info.println("[SPIFFS] \tFile successfully written");
+}
+
+char *fileRead(fs::File &file, uint16_t length)
+{
+  char *buf = (char *)malloc(length + 1);
+  if (!buf)
+  {
+    error.println("[SPIFFS] \tFailed to allocate memory");
+    file.close();
+    return nullptr;
+  }
+
+  size_t read = file.readBytes(buf, length);
+  if (read != length)
+  {
+    error.println("[SPIFFS] \tFailed to read file");
+    free(buf);
+    file.close();
+    return nullptr;
+  }
+
+  buf[length] = '\0';
+  file.close();
+  return buf;
+}
+
+uint8_t fileRead8(fs::File &file)
+{
+  return file.read();
+}
+
+uint16_t fileRead16(fs::File &file)
+{
+  uint16_t result;
+  file.read((uint8_t *)&result, 2);
+  return result;
+}
+
+uint32_t fileRead32(fs::File &file)
+{
+  uint32_t result;
+  file.read((uint8_t *)&result, 4);
+  return result;
 }
