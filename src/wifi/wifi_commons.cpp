@@ -60,7 +60,7 @@ char *executeGetRequest(const char *url, const char *caCertificate)
     WiFiClientSecure *client = new WiFiClientSecure;
     if (client)
     {
-        const char *cert = getFileFromSPIFFS(caCertificate);
+        const char *cert = SpiffsGetFileContent(caCertificate);
         if (cert)
         {
             client->setCACert(cert);

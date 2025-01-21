@@ -11,22 +11,22 @@ void setup()
   SpiffsSetup();
   WiFiSetup();
   TFTSetup();
+
+  TFTFillScreen(TFT_GREEN);
 }
 
-bool firstTime = true;
 void loop()
 {
-  delay(2000);
-
-  if (firstTime)
+  if (!SpiffsFileExists("/images/gifs/eyes.gif"))
   {
-    firstTime = false;
-
     char *response = executeGetRequest("https://raw.githubusercontent.com/nikoo5/AmzCube/refs/heads/master/web/images/gifs/eyes.gif", "/certs/DigiCert_CA1.crt");
 
     if (response != nullptr)
     {
-      writeFileToSPIFFS("/images/gifs/eyes.gif", response);
+      SpiffsWriteFileContent("/images/gifs/eyes.gif", response);
     }
+  }
+  else
+  {
   }
 }
