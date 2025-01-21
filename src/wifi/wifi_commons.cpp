@@ -28,18 +28,26 @@ bool setNtpClock()
     configTime(0, 0, "pool.ntp.org");
 
     time_t nowSecs = time(nullptr);
+
+    uint8_t timeout = 20;
     while (nowSecs < 8 * 3600 * 2)
     {
         delay(500);
         info.print(".");
         yield();
         nowSecs = time(nullptr);
+
+        if (timeout-- == 0)
+        {
+            error.println("[WiFi] \tFailed to obtain NTP time");
+            return false;
+        }
     }
 
     info.println();
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
-    info.print("[WiFi] \tCurrent time: ");
+    info.print("[WiFi] \tSuccessfully obtained NTP time: ");
     info.println(asctime(&timeinfo));
 
     return true;
