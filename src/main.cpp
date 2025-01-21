@@ -12,18 +12,20 @@ void setup()
   WiFiSetup();
 }
 
+bool firstTime = true;
 void loop()
 {
   delay(2000);
 
-  char *response = executeGetRequest("https://raw.githubusercontent.com/nikoo5/AmzCube/refs/heads/master/platformio.ini", "/certs/DigiCert_CA1.crt");
-
-  if (response != nullptr)
+  if (firstTime)
   {
-    info.println("Response:");
-    info.println(response);
-    free(response);
-  }
+    firstTime = false;
 
-  delay(60000);
+    char *response = executeGetRequest("https://raw.githubusercontent.com/nikoo5/AmzCube/refs/heads/master/web/images/gifs/eyes.gif", "/certs/DigiCert_CA1.crt");
+
+    if (response != nullptr)
+    {
+      writeFileToSPIFFS("/images/gifs/eyes.gif", response);
+    }
+  }
 }
