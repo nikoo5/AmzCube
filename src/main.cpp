@@ -10,6 +10,7 @@ void setup()
 
   SpiffsSetup();
   WiFiSetup();
+  TFTSetup();
 }
 
 bool firstTime = true;
