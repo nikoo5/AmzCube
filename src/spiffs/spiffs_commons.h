@@ -6,6 +6,7 @@
 #include "amzcube_commons.h"
 
 void SpiffsSetup();
+bool fileExists(const char *filename);
 char *getFileFromSPIFFS(const char *filename);
 void writeFileToSPIFFS(const char *filename, const char *content);
 

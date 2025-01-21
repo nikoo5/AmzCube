@@ -13,6 +13,11 @@ void SpiffsSetup()
   }
 }
 
+bool fileExists(const char *filename)
+{
+  return SPIFFS.exists(filename);
+}
+
 char *getFileFromSPIFFS(const char *filename)
 {
   File file = SPIFFS.open(filename, "r");
@@ -47,6 +52,8 @@ char *getFileFromSPIFFS(const char *filename)
 
 void writeFileToSPIFFS(const char *filename, const char *content)
 {
+  info.printf("[SPIFFS] Writing file %s\n", filename);
+
   File file = SPIFFS.open(filename, "w");
   if (!file)
   {
@@ -63,4 +70,6 @@ void writeFileToSPIFFS(const char *filename, const char *content)
   }
 
   file.close();
+
+  info.println("[SPIFFS] \tFile successfully written");
 }
