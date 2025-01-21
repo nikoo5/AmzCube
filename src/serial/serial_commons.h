@@ -20,12 +20,20 @@ public:
     Serial.print(message);
 #endif
   }
+  inline void print(const String message)
+  {
+    print(message.c_str());
+  }
 
   inline void println(const char *message = "")
   {
 #if DEBUG_INFO == true
     Serial.println(message);
 #endif
+  }
+  inline void println(const String message)
+  {
+    println(message.c_str());
   }
 
   inline void printf(const char *format, ...)
@@ -52,12 +60,20 @@ public:
     Serial.print(message);
 #endif
   }
+  inline void print(const String message)
+  {
+    print(message.c_str());
+  }
 
   inline void println(const char *message = "")
   {
 #if DEBUG_WARNING == true
     Serial.println(message);
 #endif
+  }
+  inline void println(const String message)
+  {
+    println(message.c_str());
   }
 
   inline void printf(const char *format, ...)
@@ -84,12 +100,20 @@ public:
     Serial.print(message);
 #endif
   }
+  inline void print(const String message)
+  {
+    print(message.c_str());
+  }
 
   inline void println(const char *message = "")
   {
 #if DEBUG_ERROR == true
     Serial.println(message);
 #endif
+  }
+  inline void println(const String message)
+  {
+    println(message.c_str());
   }
 
   inline void printf(const char *format, ...)
