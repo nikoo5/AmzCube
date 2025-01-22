@@ -59,12 +59,24 @@ void loop()
 
     if (command == "read" && arg1 != "")
     {
-      char *content = SPIFFSGetFileContent("arg1");
+      char *content = SPIFFSGetFileContent(arg1.c_str());
       if (content != nullptr)
       {
         info.println(content);
         free(content);
       }
+    }
+    else if (command == "space" && arg1 != "")
+    {
+      if (arg1 == "total")
+        info.printf("[MAIN] Total space: %d\n", SPIFFSGetTotalSpace());
+      else if (arg1 == "free")
+        info.printf("[MAIN] Free space: %d\n", SPIFFSGetFreeSpace());
+    }
+    else if (command == "delete" && arg1 != "")
+    {
+      if (SPIFFSFileExists(arg1.c_str()))
+        SPIFFSDeleteFile(arg1.c_str());
     }
     else if (command == "gif" && arg1 != "")
     {
