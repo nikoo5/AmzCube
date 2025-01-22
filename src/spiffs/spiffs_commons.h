@@ -5,13 +5,13 @@
 
 #include "amzcube_commons.h"
 
-void SpiffsSetup();
-fs::File SpiffsGetFile(const char *filename, const char *mode);
-bool SpiffsFileExists(const char *filename);
-char *SpiffsGetFileContent(const char *filename);
-void SpiffsWriteFileContent(const char *filename, const char *content);
+void SPIFFSSetup();
+fs::File SPIFFSGetFile(const char *filename, const char *mode);
+bool SPIFFSFileExists(const char *filename);
+char *SPIFFSGetFileContent(const char *filename);
+void SPIFFSWriteFileContent(const char *filename, const char *content);
 
-char *fileRead(fs::File &f, uint16_t length);
+char *fileRead(fs::File &file, uint16_t length);
 uint8_t fileRead8(fs::File &f);
 uint16_t fileRead16(fs::File &f);
 uint32_t fileRead32(fs::File &f);

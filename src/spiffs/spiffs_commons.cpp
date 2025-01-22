@@ -1,6 +1,6 @@
 #include "spiffs_commons.h"
 
-void SpiffsSetup()
+void SPIFFSSetup()
 {
   if (!SPIFFS.begin(true))
   {
@@ -13,7 +13,7 @@ void SpiffsSetup()
   }
 }
 
-fs::File SpiffsGetFile(const char *filename, const char *mode)
+fs::File SPIFFSGetFile(const char *filename, const char *mode)
 {
   fs::File file = SPIFFS.open(filename, mode);
   if (!file)
@@ -23,12 +23,12 @@ fs::File SpiffsGetFile(const char *filename, const char *mode)
   return file;
 }
 
-bool SpiffsFileExists(const char *filename)
+bool SPIFFSFileExists(const char *filename)
 {
   return SPIFFS.exists(filename);
 }
 
-char *SpiffsGetFileContent(const char *filename)
+char *SPIFFSGetFileContent(const char *filename)
 {
   File file = SPIFFS.open(filename, "r");
   if (!file)
@@ -60,7 +60,7 @@ char *SpiffsGetFileContent(const char *filename)
   return buf;
 }
 
-void SpiffsWriteFileContent(const char *filename, const char *content)
+void SPIFFSWriteFileContent(const char *filename, const char *content)
 {
   info.printf("[SPIFFS] Writing file %s\n", filename);
 
@@ -86,26 +86,25 @@ void SpiffsWriteFileContent(const char *filename, const char *content)
 
 char *fileRead(fs::File &file, uint16_t length)
 {
-  char *buf = (char *)malloc(length + 1);
-  if (!buf)
+  uint8_t *buffer = (uint8_t *)malloc(length + 1);
+  if (!buffer)
   {
     error.println("[SPIFFS] \tFailed to allocate memory");
     file.close();
     return nullptr;
   }
 
-  size_t read = file.readBytes(buf, length);
+  size_t read = file.read((uint8_t *)buffer, length);
   if (read != length)
   {
     error.println("[SPIFFS] \tFailed to read file");
-    free(buf);
+    free(buffer);
     file.close();
     return nullptr;
   }
 
-  buf[length] = '\0';
-  file.close();
-  return buf;
+  buffer[length] = '\0';
+  return (char *)buffer;
 }
 
 uint8_t fileRead8(fs::File &file)
