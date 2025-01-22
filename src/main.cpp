@@ -10,8 +10,8 @@ void setup()
   TFTDrawText("Initializing...\n", 0, 0);
 
   // uncomment to set Wifi SSID and password for the first time
-  // NVSSetValue(NVS::WIFI_SSID, "<your_wifi_ssid>");
-  // NVSSetValue(NVS::WIFI_PASSWORD, "<your_wifi_pass>");
+  // NVSSetValue(NVSKeys::WIFI_SSID, "<your_wifi_ssid>");
+  // NVSSetValue(NVSKeys::WIFI_PASSWORD, "<your_wifi_pass>");
 
   TFTDrawText("  Setting up SPIFFS... ");
   SPIFFSSetup();
@@ -25,7 +25,7 @@ void setup()
   delay(2000);
   TFTFillScreen(TFT_BLACK);
 
-  char *initGif = NVSGetValue(NVS::INIT_GIF);
+  char *initGif = NVSGetValue(NVSKeys::INIT_GIF);
   if (initGif != nullptr)
   {
     playGif = String(initGif);
@@ -88,7 +88,7 @@ void loop()
       else
       {
         playGif = arg1;
-        NVSSetValue(NVS::INIT_GIF, playGif.c_str());
+        NVSSetValue(NVSKeys::INIT_GIF, playGif.c_str());
       }
     }
     else if (command == "download" && arg1 != "" && arg2 != "")

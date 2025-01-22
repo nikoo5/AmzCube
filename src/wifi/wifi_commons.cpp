@@ -4,8 +4,8 @@ WiFiMulti wifiMulti;
 
 void WiFiSetup()
 {
-    char *wifi_ssid = NVSGetValue(NVS::WIFI_SSID);
-    char *wifi_password = NVSGetValue(NVS::WIFI_PASSWORD);
+    char *wifi_ssid = NVSGetValue(NVSKeys::WIFI_SSID);
+    char *wifi_password = NVSGetValue(NVSKeys::WIFI_PASSWORD);
 
     WiFi.mode(WIFI_STA);
     wifiMulti.addAP(wifi_ssid, wifi_password);
