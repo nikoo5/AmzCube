@@ -41,7 +41,7 @@ public:
 #if DEBUG_INFO == true
     va_list args;
     va_start(args, format);
-    char buf[256];
+    char buf[256] = {0};
     vsnprintf(buf, 256, format, args);
     Serial.print(buf);
     va_end(args);
@@ -81,7 +81,7 @@ public:
 #if DEBUG_WARNING == true
     va_list args;
     va_start(args, format);
-    char buf[256];
+    char buf[256] = {0};
     vsnprintf(buf, 256, format, args);
     Serial.print(buf);
     va_end(args);
@@ -121,7 +121,7 @@ public:
 #if DEBUG_ERROR == true
     va_list args;
     va_start(args, format);
-    char buf[256];
+    char buf[256] = {0};
     vsnprintf(buf, 256, format, args);
     Serial.print(buf);
     va_end(args);
