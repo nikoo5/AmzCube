@@ -28,6 +28,45 @@ bool SPIFFSFileExists(const char *filename)
   return SPIFFS.exists(filename);
 }
 
+uint32_t SPIFFSGetTotalSpace()
+{
+  return SPIFFS.totalBytes();
+}
+
+uint32_t SPIFFSGetFreeSpace()
+{
+  return SPIFFS.totalBytes() - SPIFFS.usedBytes();
+}
+
+bool SPIFFSDeleteFile(const char *filename)
+{
+  info.printf("[SPIFFS] Deleting file %s\n", filename);
+  if (SPIFFS.remove(filename))
+  {
+    info.println("[SPIFFS] \tFile successfully deleted");
+    return true;
+  }
+  else
+  {
+    error.println("[SPIFFS] \tFailed to delete file");
+  }
+  return false;
+}
+
+uint32_t SPIFFSGetFileSize(const char *filename)
+{
+  File file = SPIFFS.open(filename, "r");
+  if (!file)
+  {
+    error.println("[SPIFFS] Failed to open file for reading");
+    return 0;
+  }
+
+  uint32_t size = file.size();
+  file.close();
+  return size;
+}
+
 char *SPIFFSGetFileContent(const char *filename)
 {
   File file = SPIFFS.open(filename, "r");
