@@ -13,6 +13,53 @@ void SPIFFSSetup()
   }
 }
 
+uint8_t SPIFFSPrintDirectory(const char *rootPath, uint8_t level)
+{
+  File root = SPIFFS.open(rootPath, FILE_READ);
+  File child = root.openNextFile();
+
+  for (uint8_t i = 0; i < level; i++)
+    info.print("  ");
+  // i == level - 1 ? info.print("|- ") : (i == 0 ? info.print("|  ") : info.print("  "));
+
+  info.println(String(rootPath).substring(String(rootPath).lastIndexOf("/")));
+
+  uint16_t printed = 0;
+  while (child)
+  {
+    String childPath = String(child.path());
+    child.close();
+
+    uint8_t separator = childPath.indexOf("/", String(rootPath).length() + (String(rootPath) == "/" ? 0 : 1)) + 1;
+
+    if (childPath.indexOf("/", separator))
+    {
+      String nextPath = childPath.substring(0, separator - 1);
+      uint16_t newPrinted = SPIFFSPrintDirectory(nextPath.c_str(), level + 1);
+
+      for (uint16_t i = 0; i < newPrinted; i++)
+        child = root.openNextFile();
+
+      printed += newPrinted;
+    }
+    else
+    {
+      String fileName = childPath.substring(separator);
+      for (uint8_t i = 0; i < level + 1; i++)
+        info.print("  ");
+      // i == level - 1 ? info.print("| ") : info.print("  ");
+      info.println(fileName.substring(String(rootPath).length() + 1));
+      printed++;
+    }
+
+    child = root.openNextFile();
+  }
+
+  root.close();
+
+  return printed;
+}
+
 fs::File SPIFFSGetFile(const char *filename, const char *mode)
 {
   fs::File file = SPIFFS.open(filename, mode);

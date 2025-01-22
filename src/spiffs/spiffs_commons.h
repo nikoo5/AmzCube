@@ -6,6 +6,7 @@
 #include "amzcube_commons.h"
 
 void SPIFFSSetup();
+uint8_t SPIFFSPrintDirectory(const char *rootPath, uint8_t level);
 uint32_t SPIFFSGetTotalSpace();
 uint32_t SPIFFSGetFreeSpace();
 bool SPIFFSDeleteFile(const char *filename);
