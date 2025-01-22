@@ -18,9 +18,16 @@ void WiFiSetup()
     WiFi.mode(WIFI_STA);
     wifiMulti.addAP(wifi_ssid, wifi_password);
 
-    while ((wifiMulti.run() != WL_CONNECTED))
+    uint8_t timeout = 5;
+    while ((wifiMulti.run() != WL_CONNECTED) && (timeout-- > 0))
     {
         info.print(".");
+    }
+
+    if (wifiMulti.run() != WL_CONNECTED)
+    {
+        error.println("\n[WiFi] \tFailed to connect");
+        return;
     }
     info.println("\n[WiFi] \tSuccessfully connected");
 
