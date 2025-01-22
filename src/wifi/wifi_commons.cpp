@@ -4,18 +4,25 @@ WiFiMulti wifiMulti;
 
 void WiFiSetup()
 {
-    char *wifi_ssid = NVSGetValue(NVSKeys::WIFI_SSID);
-    char *wifi_password = NVSGetValue(NVSKeys::WIFI_PASSWORD);
+    char *wifi_ssid = NVSGetValue(NVS_KEY_WIFI_SSID);
+    char *wifi_password = NVSGetValue(NVS_KEY_WIFI_PASSWORD);
+
+    if (!wifi_ssid || !wifi_password)
+    {
+        error.println("[WiFi] SSID or password not found in NVS");
+        return;
+    }
+
+    info.printf("[WiFi] Connecting to %s", wifi_ssid);
 
     WiFi.mode(WIFI_STA);
     wifiMulti.addAP(wifi_ssid, wifi_password);
 
-    info.print("[WiFi] Waiting for WiFi to connect");
     while ((wifiMulti.run() != WL_CONNECTED))
     {
         info.print(".");
     }
-    info.printf("\n[WiFi] \tConnected to SSID: %s\n", wifi_ssid);
+    info.println("\n[WiFi] \tSuccessfully connected");
 
     WiFiSetNtpClock();
 }
