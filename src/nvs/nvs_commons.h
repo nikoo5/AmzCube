@@ -5,7 +5,7 @@
 
 #include "amzcube_commons.h"
 
-bool setNvsValue(const char *key, const char *value);
-char *getNvsValue(const char *key);
+bool NVSSetValue(const char *key, const char *value);
+char *NVSGetValue(const char *key);
 
 #endif

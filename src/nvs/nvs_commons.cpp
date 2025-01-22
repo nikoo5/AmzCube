@@ -1,6 +1,6 @@
 #include "nvs_commons.h"
 
-bool setNvsValue(const char *key, const char *value)
+bool NVSSetValue(const char *key, const char *value)
 {
   nvs_handle handle;
   esp_err_t err = nvs_open("storage", NVS_READWRITE, &handle);
@@ -30,7 +30,7 @@ bool setNvsValue(const char *key, const char *value)
   return true;
 }
 
-char *getNvsValue(const char *key)
+char *NVSGetValue(const char *key)
 {
   nvs_handle handle;
   esp_err_t err = nvs_open("storage", NVS_READONLY, &handle);
