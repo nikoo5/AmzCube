@@ -104,3 +104,64 @@ char *WiFiExecuteGetRequest(const char *url, const char *caCertificate)
 
     return nullptr;
 }
+
+bool WiFiDownloadFile(const char *url, const char *caCertificate, const char *filePath)
+{
+    info.printf("[WiFi] Downloading file from: %s\n", url);
+    bool returnValue = false;
+
+    WiFiClientSecure *client = new WiFiClientSecure;
+    if (client)
+    {
+        const char *cert = SPIFFSGetFileContent(caCertificate);
+        if (cert)
+        {
+            client->setCACert(cert);
+
+            {
+                HTTPClient http;
+                if (http.begin(*client, url))
+                {
+                    int httpCode = http.GET();
+
+                    info.printf("[WiFi] \tHTTP code: %d\n", httpCode);
+                    if (httpCode > 0)
+                    {
+                        if (httpCode == HTTP_CODE_OK)
+                        {
+                            info.println("[WiFi] \tRequest successful");
+                            File file = SPIFFS.open(filePath, FILE_WRITE);
+                            if (file)
+                            {
+                                info.printf("[WiFi] \tWriting to file: %s\n", filePath);
+                                http.writeToStream(&file);
+                                file.close();
+                                returnValue = true;
+
+                                info.println("[WiFi] \tFile downloaded successfully");
+                            }
+                        }
+                    }
+
+                    http.end();
+                }
+                else
+                {
+                    error.println("[WiFi] \tFailed to connect");
+                }
+            }
+        }
+        else
+        {
+            error.println("[WiFi] \tFailed to set CA certificate");
+        }
+
+        delete client;
+    }
+    else
+    {
+        error.println("[WiFi] \tFailed to create client");
+    }
+
+    return returnValue;
+}

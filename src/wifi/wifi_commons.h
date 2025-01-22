@@ -12,5 +12,6 @@
 void WiFiSetup();
 bool WiFiSetNtpClock();
 char *WiFiExecuteGetRequest(const char *url, const char *caCertificate);
+bool WiFiDownloadFile(const char *url, const char *caCertificate, const char *filePath);
 
 #endif // WIFI_H_
