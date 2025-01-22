@@ -130,15 +130,37 @@ bool WiFiDownloadFile(const char *url, const char *caCertificate, const char *fi
                         if (httpCode == HTTP_CODE_OK)
                         {
                             info.println("[WiFi] \tRequest successful");
-                            File file = SPIFFS.open(filePath, FILE_WRITE);
-                            if (file)
-                            {
-                                info.printf("[WiFi] \tWriting to file: %s\n", filePath);
-                                http.writeToStream(&file);
-                                file.close();
-                                returnValue = true;
 
-                                info.println("[WiFi] \tFile downloaded successfully");
+                            uint32_t contentLength = http.getSize();
+                            uint32_t SPIFFSFreeSpace = SPIFFSGetFreeSpace();
+
+                            bool download = contentLength < SPIFFSFreeSpace;
+
+                            if (!download && SPIFFSFileExists(filePath))
+                            {
+                                download = contentLength < SPIFFSFreeSpace + SPIFFSGetFileSize(filePath);
+                                if (download)
+                                {
+                                    SPIFFSDeleteFile(filePath);
+                                }
+                            }
+
+                            if (!download)
+                            {
+                                error.printf("[WiFi] \tNot enough space to download file (Required: %d, Available: %d)\n", contentLength, SPIFFSFreeSpace);
+                            }
+                            else
+                            {
+                                File file = SPIFFS.open(filePath, FILE_WRITE);
+                                if (file)
+                                {
+                                    info.printf("[WiFi] \tWriting to file: %s\n", filePath);
+                                    http.writeToStream(&file);
+                                    file.close();
+                                    returnValue = true;
+
+                                    info.println("[WiFi] \tFile downloaded successfully");
+                                }
                             }
                         }
                     }
