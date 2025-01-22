@@ -1,5 +1,7 @@
 #include "main.h"
 
+String playGif = "";
+
 void setup()
 {
   SerialSetup();
@@ -8,8 +10,8 @@ void setup()
   TFTDrawText("Initializing...\n", 0, 0);
 
   // uncomment to set Wifi SSID and password for the first time
-  // NVSSetValue("wifi_ssid", "<your_wifi_ssid>");
-  // NVSSetValue("wifi_password", "<your_wifi_pass>");
+  // NVSSetValue(NVS::WIFI_SSID, "<your_wifi_ssid>");
+  // NVSSetValue(NVS::WIFI_PASSWORD, "<your_wifi_pass>");
 
   TFTDrawText("  Setting up SPIFFS... ");
   SPIFFSSetup();
@@ -20,27 +22,19 @@ void setup()
   TFTDrawText("OK\n");
 
   TFTDrawText("All systems ready!\n");
-  delay(1000);
+  delay(2000);
   TFTFillScreen(TFT_BLACK);
+
+  char *initGif = NVSGetValue(NVS::INIT_GIF);
+  if (initGif != nullptr)
+  {
+    playGif = String(initGif);
+    free(initGif);
+  }
 }
 
 void loop()
 {
-  if (!SPIFFSFileExists("/images/gifs/eyes.gif"))
-  {
-    char *response = WiFiExecuteGetRequest("https://raw.githubusercontent.com/nikoo5/AmzCube/refs/heads/master/web/images/gifs/eyes.gif", "/certs/DigiCert_CA1.crt");
-
-    if (response != nullptr)
-    {
-      SPIFFSWriteFileContent("/images/gifs/eyes.gif", response);
-    }
-  }
-  else
-  {
-    // if (!TFTDrawAnimatedGif("/images/gifs/eyes.gif", 0, 0))
-    //   delay(5000);
-  }
-
   if (Serial.available())
   {
     String rcv = Serial.readStringUntil('\n');
@@ -78,17 +72,33 @@ void loop()
       if (SPIFFSFileExists(arg1.c_str()))
         SPIFFSDeleteFile(arg1.c_str());
     }
+    else if (command == "list" && arg1 != "")
+    {
+      SPIFFSPrintDirectory(arg1.c_str(), 0);
+    }
     else if (command == "gif" && arg1 != "")
     {
-      int replay = arg2 != "" ? arg2.toInt() : 1;
-      for (int i = 0; i < replay; i++)
-        TFTDrawAnimatedGif(arg1.c_str(), 0, 0);
+      if (arg2 != "always")
+      {
+        int replay = arg2 != "" ? arg2.toInt() : 1;
+        for (int i = 0; i < replay; i++)
+          TFTDrawAnimatedGif(arg1.c_str(), 0, 0);
+        TFTFillScreen(TFT_BLACK);
+      }
+      else
+      {
+        playGif = arg1;
+        NVSSetValue(NVS::INIT_GIF, playGif.c_str());
+      }
     }
     else if (command == "download" && arg1 != "" && arg2 != "")
     {
       bool status = WiFiDownloadFile(arg1.c_str(), "/certs/DigiCert_CA1.crt", arg2.c_str());
     }
   }
+
+  if (playGif != "")
+    TFTDrawAnimatedGif(playGif.c_str(), 0, 0);
 
   delay(1000);
 }
