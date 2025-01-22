@@ -10,7 +10,7 @@
 #include "spiffs/spiffs_commons.h"
 
 void WiFiSetup();
-bool setNtpClock();
-char *executeGetRequest(const char *url, const char *caCertificate);
+bool WiFiSetNtpClock();
+char *WiFiExecuteGetRequest(const char *url, const char *caCertificate);
 
 #endif // WIFI_H_

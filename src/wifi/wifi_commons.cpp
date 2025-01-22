@@ -4,8 +4,8 @@ WiFiMulti wifiMulti;
 
 void WiFiSetup()
 {
-    char *wifi_ssid = getNvsValue("wifi_ssid");
-    char *wifi_password = getNvsValue("wifi_password");
+    char *wifi_ssid = NVSGetValue("wifi_ssid");
+    char *wifi_password = NVSGetValue("wifi_password");
 
     WiFi.mode(WIFI_STA);
     wifiMulti.addAP(wifi_ssid, wifi_password);
@@ -17,10 +17,10 @@ void WiFiSetup()
     }
     info.printf("\n[WiFi] \tConnected to SSID: %s\n", wifi_ssid);
 
-    setNtpClock();
+    WiFiSetNtpClock();
 }
 
-bool setNtpClock()
+bool WiFiSetNtpClock()
 {
     info.println("[WiFi] Setting clock using NTP");
     info.print("[WiFi] \tWaiting for NTP time sync");
@@ -39,7 +39,7 @@ bool setNtpClock()
 
         if (timeout-- == 0)
         {
-            error.println("[WiFi] \tFailed to obtain NTP time");
+            error.println("\n[WiFi] \tFailed to obtain NTP time");
             return false;
         }
     }
@@ -53,14 +53,14 @@ bool setNtpClock()
     return true;
 }
 
-char *executeGetRequest(const char *url, const char *caCertificate)
+char *WiFiExecuteGetRequest(const char *url, const char *caCertificate)
 {
     info.printf("[WiFi] Executing GET request to: %s\n", url);
 
     WiFiClientSecure *client = new WiFiClientSecure;
     if (client)
     {
-        const char *cert = SpiffsGetFileContent(caCertificate);
+        const char *cert = SPIFFSGetFileContent(caCertificate);
         if (cert)
         {
             client->setCACert(cert);
