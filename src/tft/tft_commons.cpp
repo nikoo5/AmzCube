@@ -7,7 +7,8 @@ void TFTSetup()
   tft.begin();
   tft.setRotation(0);
   tft.fillScreen(TFT_BLACK);
-  tft.setTextSize(2);
+  tft.setTextSize(1);
+  tft.setCursor(0, 0);
   tft.setTextColor(TFT_WHITE);
 }
 
@@ -58,4 +59,15 @@ bool TFTDrawAnimatedGif(const char *filename, uint8_t x, uint8_t y)
   GifDraw(filename, &tft);
 
   return true;
+}
+
+void TFTDrawText(const char *text, int x, int y)
+{
+  if (x != -1 && y != -1)
+    tft.setCursor(x, y);
+  tft.print(text);
+}
+void TFTDrawText(const char *text)
+{
+  TFTDrawText(text, -1, -1);
 }

@@ -11,5 +11,7 @@
 void TFTSetup();
 void TFTFillScreen(uint16_t color);
 bool TFTDrawAnimatedGif(const char *filename, uint8_t x, uint8_t y);
+void TFTDrawText(const char *text, int x, int y);
+void TFTDrawText(const char *text);
 
 #endif
