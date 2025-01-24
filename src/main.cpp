@@ -1,6 +1,20 @@
 #include "main.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 String playGif = "";
+
+void playGifTask(void *pvParameters)
+{
+  while (true)
+  {
+    if (playGif != "")
+    {
+      TFTDrawAnimatedGif(playGif.c_str(), 0, 0);
+    }
+  }
+}
 
 void setup()
 {
@@ -31,6 +45,8 @@ void setup()
     playGif = String(initGif);
     free(initGif);
   }
+
+  xTaskCreatePinnedToCore(playGifTask, "playGifTask", 4096, NULL, 1, NULL, 0);
 }
 
 void loop()
@@ -97,8 +113,8 @@ void loop()
     }
   }
 
-  if (playGif != "")
-    TFTDrawAnimatedGif(playGif.c_str(), 0, 0);
+  // if (playGif != "")
+  //   TFTDrawAnimatedGif(playGif.c_str(), 0, 0);
 
   delay(1000);
 }
